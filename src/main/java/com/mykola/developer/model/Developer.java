@@ -6,10 +6,10 @@ package main.java.com.mykola.developer.model;
     private String name;
     private String lastName;
     private String position;
-    private double salary;
+    private int salary;
     private int experience;
 
-     public Developer(int id, String name, String lastName, String position, double salary, int experience) {
+     public Developer(int id, String name, String lastName, String position, int salary, int experience) {
          this.id = id;
          this.name = name;
          this.lastName = lastName;
@@ -50,11 +50,11 @@ package main.java.com.mykola.developer.model;
          this.position = position;
      }
 
-     public double getSalary() {
+     public int getSalary() {
          return salary;
      }
 
-     public void setSalary(double salary) {
+     public void setSalary(int salary) {
          this.salary = salary;
      }
 
@@ -64,5 +64,17 @@ package main.java.com.mykola.developer.model;
 
      public void setExperience(int experience) {
          this.experience = experience;
+     }
+
+     @Override
+     public String toString() {
+         return "Developer{" +
+                 "id=" + id +
+                 ", name='" + name + '\'' +
+                 ", lastName='" + lastName + '\'' +
+                 ", position='" + position + '\'' +
+                 ", salary=" + salary +
+                 ", experience=" + experience +
+                 '}';
      }
  }

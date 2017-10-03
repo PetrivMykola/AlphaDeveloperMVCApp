@@ -1,14 +1,16 @@
-package main.java.com.mykola.developer.DAO;
+package main.java.com.mykola.developer.dao;
 
 import main.java.com.mykola.developer.model.Developer;
+
+import java.util.List;
 
 public interface DeveloperDAO {
 
     void save(Developer dev);
 
-    String getById(int id);
+    Developer getById(int id);
 
-    void getAll();
+    List<Developer> getAll();
 
     void delete(int id);
 
