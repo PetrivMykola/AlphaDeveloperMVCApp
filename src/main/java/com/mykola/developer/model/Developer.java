@@ -9,6 +9,8 @@ package main.java.com.mykola.developer.model;
     private int salary;
     private int experience;
 
+    public Developer() { }
+
      public Developer(int id, String name, String lastName, String position, int salary, int experience) {
          this.id = id;
          this.name = name;

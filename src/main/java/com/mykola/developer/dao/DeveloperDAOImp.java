@@ -24,7 +24,7 @@ public class DeveloperDAOImp implements DeveloperDAO {
 
     public void save(Developer dev) {
         try (FileWriter writer = new FileWriter(file, true)) {
-            checkId(dev.getId());
+             checkId(dev.getId());
 
             writer.write(dev.getId() + ", " + dev.getName() + ", " +
                     dev.getLastName() + ", " + dev.getPosition() + ", " +
@@ -76,15 +76,20 @@ public class DeveloperDAOImp implements DeveloperDAO {
              FileWriter newFileWriter = new FileWriter(tempFile)) {
                 checkFile(file);
 
-            while ((line = reader.readLine()) != null) {
-                if (!(Character.getNumericValue(line.charAt(0)) == id)) {
-                    newFileWriter.write(line + System.lineSeparator());
-                    newFileWriter.flush();
-                }
-            }
-        } catch (IOException | EmptyFileException e) {
+                if (isExistDevInFileById(id)) {
+
+                    while ((line = reader.readLine()) != null) {
+
+                        if (!(Character.getNumericValue(line.charAt(0)) == id)) {
+                            newFileWriter.write(line + System.lineSeparator());
+                            newFileWriter.flush();
+                        }
+                    }
+            } else throw new NotFoundIdException("Cannot find id in file for delete Developer");
+        } catch (IOException | EmptyFileException  | NotFoundIdException e) {
             System.out.println(e.getMessage());
         }
+
         if (!file.delete()) System.out.println("Cannot delete file");
         if (!tempFile.renameTo(file)) System.out.println("Cannot rename file");
 
@@ -92,11 +97,11 @@ public class DeveloperDAOImp implements DeveloperDAO {
 
     public void update(Developer dev) {
         try {
-            if(isExistDevInFileById(dev)) {
+            if(isExistDevInFileById(dev.getId())) {
                 delete(dev.getId());
                 Developer newDev = dev;
                 save(newDev);
-            } else throw new NotFoundIdException("Cannot find developer in file");
+            } else throw new NotFoundIdException("Cannot find developer in file for update");
         } catch (EmptyFileException | NotFoundIdException e) {
             System.out.println(e.getMessage());
         }
@@ -105,9 +110,11 @@ public class DeveloperDAOImp implements DeveloperDAO {
     public void checkId(int id) {
         String line;
         try (BufferedReader read = new BufferedReader(new FileReader(file))) {
-            while ((line = read.readLine()) != null) {
-                if (((Character.getNumericValue(line.charAt(0)) == id)))
-                    throw new IdAlredyExistException("Id should be unique");
+            if (file.length() != 0  ) {
+                while ((line = read.readLine()) != null) {
+                    if (((Character.getNumericValue(line.charAt(0)) == id)))
+                        throw new IdAlredyExistException("Id should be unique");
+                }
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -125,7 +132,7 @@ public class DeveloperDAOImp implements DeveloperDAO {
         return dev;
     }
 
-    public boolean isExistDevInFileById(Developer dev) {
+    public boolean isExistDevInFileById(int id ) {
         boolean result = false;
         String line;
 
@@ -133,9 +140,9 @@ public class DeveloperDAOImp implements DeveloperDAO {
             checkFile(file);
 
             while ((line = reader.readLine()) != null) {
-                if (Character.getNumericValue(line.charAt(0)) == dev.getId()) {
+                if (Character.getNumericValue(line.charAt(0)) == id) {
                     result = true;
-                } else result = false;
+                }
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
